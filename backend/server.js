@@ -58,8 +58,8 @@ app.get("/callback", async (req, res) => {
     const { access_token, refresh_token } = tokenResponse.data;
 
     // Redirect back to frontend with tokens
-    res.redirect(
-      `https://your-frontend.vercel.app?access_token=${access_token}&refresh_token=${refresh_token}`
+    direct(
+      `https://https://discogs-to-spotify-ten.vercel.app?access_token=${access_token}&refresh_token=${refresh_token}`
     );
   } catch (error) {
     console.error(error.response?.data || error);
