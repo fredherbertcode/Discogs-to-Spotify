@@ -57,9 +57,9 @@ app.get("/callback", async (req, res) => {
 
     const { access_token, refresh_token } = tokenResponse.data;
 
-    // Redirect back to frontend (Vercel)
+    // Redirect back to **your Vercel frontend**
     res.redirect(
-      `https://csv-to-spotify.vercel.app?access_token=${access_token}&refresh_token=${refresh_token}`
+      `https://discogs-to-spotify-ten.vercel.app?access_token=${access_token}&refresh_token=${refresh_token}`
     );
   } catch (error) {
     console.error("Spotify token error:", error.response?.data || error);
