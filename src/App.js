@@ -1,44 +1,70 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 
-const API_BASE = "https://discogs-to-spotify-production.up.railway.app";
+const API_BASE = "https://your-backend.up.railway.app"; 
+// ⬆️ change to http://127.0.0.1:5001 if running locally
 
 function App() {
-  const [csvFile, setCsvFile] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
+  const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
 
-  const handleFileChange = (e) => {
-    setCsvFile(e.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!csvFile) return alert("Select a CSV file first.");
-
-    const formData = new FormData();
-    formData.append("file", csvFile);
-
-    try {
-      const res = await axios.post(`${API_BASE}/upload`, formData);
-      setMessage(res.data.message || "Playlist created!");
-    } catch (err) {
-      console.error(err);
-      setMessage("Error creating playlist.");
+  // Check if token is already available (from backend redirect)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const access_token = urlParams.get("access_token");
+    if (access_token) {
+      setLoggedIn(true);
+      setToken(access_token);
+      window.history.replaceState({}, document.title, "/"); // clean URL
     }
-  };
+  }, []);
 
   const handleLogin = () => {
     window.location.href = `${API_BASE}/login`;
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please choose a CSV file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch(`${API_BASE}/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      console.log("Upload response:", data);
+      setMessage("✅ Upload successful! Check backend logs.");
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Upload failed.");
+    }
+  };
+
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>Discogs Collection → Spotify Playlist</h1>
-      <button onClick={handleLogin}>Login with Spotify</button>
-      <div style={{ margin: "20px" }}>
-        <input type="file" accept=".csv" onChange={handleFileChange} />
-      </div>
-      <button onClick={handleUpload}>Upload CSV & Create Playlist</button>
-      {message && <p>{message}</p>}
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      {!loggedIn ? (
+        <button onClick={handleLogin}>Login with Spotify</button>
+      ) : (
+        <>
+          <h2>✅ Logged in to Spotify</h2>
+          <p>Token: {token?.slice(0, 20)}...</p>
+
+          <input type="file" onChange={handleFileChange} />
+          <button onClick={handleUpload}>Upload CSV</button>
+          <p>{message}</p>
+        </>
+      )}
     </div>
   );
 }

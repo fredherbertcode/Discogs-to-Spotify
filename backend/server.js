@@ -7,10 +7,6 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-// Health check root endpoint for Railway
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
-});
 
 // Spotify credentials
 const clientId = process.env.SPOTIFY_CLIENT_ID;
