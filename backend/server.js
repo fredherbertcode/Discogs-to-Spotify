@@ -7,6 +7,10 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Health check root endpoint for Railway
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
+});
 
 // Spotify credentials
 const clientId = process.env.SPOTIFY_CLIENT_ID;
@@ -96,7 +100,7 @@ app.get("/refresh_token", async (req, res) => {
 });
 
 // Start server (Railway uses PORT env)
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
