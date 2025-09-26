@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>CSV → Spotify Playlist</h1>
+      <h1>Discogs Collection → Spotify Playlist</h1>
       <button onClick={handleLogin}>Login with Spotify</button>
       <div style={{ margin: "20px" }}>
         <input type="file" accept=".csv" onChange={handleFileChange} />
