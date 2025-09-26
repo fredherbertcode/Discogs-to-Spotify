@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_BASE = "https://lucky-communication-production.up.railway.app";
+const API_BASE = "https://discogs-to-spotify-production.up.railway.app";
 
 function App() {
   const [csvFile, setCsvFile] = useState(null);
